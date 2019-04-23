@@ -1,4 +1,12 @@
 # Change Log
+
+## 0.24.2 (April 17, 2019 )
+* iOS: [#2818](https://github.com/react-native-community/react-native-maps/pull/2818) Google Maps - Weak refs to gesture targets to address memory leak
+
+## 0.24.1 (April 16, 2019 )
+* iOS: [#2815](https://github.com/react-native-community/react-native-maps/pull/2815) Google Maps - Free instance variable in getActionForTarget to address memory leak
+
+# Change Log
 ## 0.24.0 (April 11, 2019 )
 * Common: [#2740](https://github.com/react-native-community/react-native-maps/pull/2740) Fix deprecated UIManager usage when accessing component names
 * Common: [#2393](https://github.com/react-native-community/react-native-maps/pull/2393) add typings for pointForCoordinate & coordinateForPoint
