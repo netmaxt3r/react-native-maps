@@ -1,8 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Dimensions } from 'react-native';
 
-import MapView, { Marker, ProviderPropType } from 'react-native-maps';
-import PriceMarker from './PriceMarker';
+import MapView from 'react-native-maps';
 
 const { width, height } = Dimensions.get('window');
 
@@ -26,16 +25,12 @@ class MarkerTypes extends React.Component {
         latitude: LATITUDE + SPACE,
         longitude: LONGITUDE + SPACE,
       },
-      b: {
-        latitude: LATITUDE - SPACE,
-        longitude: LONGITUDE - SPACE,
-      },
     };
   }
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={styles.container} accessible>
         <MapView
           provider={this.props.provider}
           style={styles.map}
@@ -46,19 +41,9 @@ class MarkerTypes extends React.Component {
             longitudeDelta: LONGITUDE_DELTA,
           }}
         >
-          <Marker
+          <MapView.Marker
+            testID="marker"
             coordinate={this.state.a}
-            onSelect={e => log('onSelect', e)}
-            onDrag={e => log('onDrag', e)}
-            onDragStart={e => log('onDragStart', e)}
-            onDragEnd={e => log('onDragEnd', e)}
-            onPress={e => log('onPress', e)}
-            draggable
-          >
-            <PriceMarker amount={99} />
-          </Marker>
-          <Marker
-            coordinate={this.state.b}
             onSelect={e => log('onSelect', e)}
             onDrag={e => log('onDrag', e)}
             onDragStart={e => log('onDragStart', e)}
@@ -73,7 +58,7 @@ class MarkerTypes extends React.Component {
 }
 
 MarkerTypes.propTypes = {
-  provider: ProviderPropType,
+  provider: MapView.ProviderPropType,
 };
 
 const styles = StyleSheet.create({
@@ -87,4 +72,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MarkerTypes;
+module.exports = MarkerTypes;

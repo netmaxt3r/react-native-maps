@@ -6,8 +6,9 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
+
 import MapView, { Marker, ProviderPropType } from 'react-native-maps';
-import PriceMarker from './PriceMarker';
+import flagPinkImg from './assets/flag-pink.png';
 
 const { width, height } = Dimensions.get('window');
 
@@ -16,8 +17,9 @@ const LATITUDE = 37.78825;
 const LONGITUDE = -122.4324;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+let id = 0;
 
-class ViewsAsMarkers extends React.Component {
+class MassiveCustomMarkers extends React.Component {
   constructor(props) {
     super(props);
 
@@ -28,20 +30,35 @@ class ViewsAsMarkers extends React.Component {
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,
       },
-      coordinate: {
-        latitude: LATITUDE,
-        longitude: LONGITUDE,
-      },
-      amount: 99,
+      markers: [],
     };
+
+    this.onMapPress = this.onMapPress.bind(this);
   }
 
-  increment() {
-    this.setState({ amount: this.state.amount + 1 });
+  generateMarkers(fromCoordinate) {
+    const result = [];
+    const { latitude, longitude } = fromCoordinate;
+    for (let i = 0; i < 100; i++) {
+      const newMarker = {
+        coordinate: {
+          latitude: latitude + 0.001 * i,
+          longitude: longitude + 0.001 * i,
+        },
+        key: `foo${id++}`,
+      };
+      result.push(newMarker);
+    }
+    return result;
   }
 
-  decrement() {
-    this.setState({ amount: this.state.amount - 1 });
+  onMapPress(e) {
+    this.setState({
+      markers: [
+        ...this.state.markers,
+        ...this.generateMarkers(e.nativeEvent.coordinate),
+      ],
+    });
   }
 
   render() {
@@ -51,23 +68,23 @@ class ViewsAsMarkers extends React.Component {
           provider={this.props.provider}
           style={styles.map}
           initialRegion={this.state.region}
+          onPress={this.onMapPress}
         >
-          <Marker coordinate={this.state.coordinate}>
-            <PriceMarker amount={this.state.amount} />
-          </Marker>
+          {this.state.markers.map(marker => (
+            <Marker
+              title={marker.key}
+              image={flagPinkImg}
+              key={marker.key}
+              coordinate={marker.coordinate}
+            />
+          ))}
         </MapView>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
-            onPress={() => this.decrement()}
-            style={[styles.bubble, styles.button]}
+            onPress={() => this.setState({ markers: [] })}
+            style={styles.bubble}
           >
-            <Text style={styles.ammountButton}>-</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => this.increment()}
-            style={[styles.bubble, styles.button]}
-          >
-            <Text style={styles.ammountButton}>+</Text>
+            <Text>Tap to create 100 markers</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -75,7 +92,7 @@ class ViewsAsMarkers extends React.Component {
   }
 }
 
-ViewsAsMarkers.propTypes = {
+MassiveCustomMarkers.propTypes = {
   provider: ProviderPropType,
 };
 
@@ -109,7 +126,6 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     backgroundColor: 'transparent',
   },
-  ammountButton: { fontSize: 20, fontWeight: 'bold' },
 });
 
-export default ViewsAsMarkers;
+export default MassiveCustomMarkers;
