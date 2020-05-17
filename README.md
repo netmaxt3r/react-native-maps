@@ -612,8 +612,8 @@ Pass an array of coordinates to focus a map region on said coordinates.
 
 * Make sure that you have [properly installed](docs/installation.md) react-native-maps.
 * Check in the logs if there is more informations about the issue.
-* Try setting the style of the MapView to an absolute position with top, left, right and bottom values set.
-* Make sure you have enabled Google Maps API in ![Google developer console](https://console.developers.google.com/apis/library)
+* Try setting the style of the MapView to an absolute position with top, left, right and bottom  values set.
+*   Make sure you have enabled Google Maps API in [Google developer console](https://console.developers.google.com/apis/library)
 
 ```javascript
 const styles = StyleSheet.create({
@@ -652,6 +652,29 @@ Good:
 </View>
 ```
 
+### Children Components Not Re-Rendering
+Components that aren't declared by this library (Ex: Markers, Polyline) must not be children of the MapView component due to MapView's unique rendering methodology. Have your custom components / views outside the MapView component and position absolute to ensure they only re-render as needed.
+Example:
+Bad:
+
+```jsx
+  <View style={StyleSheet.absoluteFillObject}>
+    <MapView style={StyleSheet.absoluteFillObject}>
+      <View style={{ position: 'absolute', top: 100, left: 50 }}/>
+    </MapView>
+  </View>
+```
+
+Good:
+
+```jsx
+  <View style={StyleSheet.absoluteFillObject}>
+    <MapView style={StyleSheet.absoluteFillObject} />
+    <View style={{ position: 'absolute', top: 100, left: 50 }}/>
+  </View>
+```
+
+Source: https://github.com/react-native-community/react-native-maps/issues/1901
 
 License
 --------
